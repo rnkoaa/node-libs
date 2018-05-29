@@ -1,0 +1,14 @@
+{
+  "name": "consul-service-discovery",
+  "version": "1.0.0",
+  "description": "Service discovery using consul service for Nodejs applications",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Richard Agyei <richard.agyei@outlook.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^2.8.3"
+  }
+}

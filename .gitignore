@@ -1,3 +1,5 @@
+**/*/export/
 **/*.log
 **/*/dist/
 **/node_modules/
+

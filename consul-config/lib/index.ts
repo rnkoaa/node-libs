@@ -1,3 +1,1 @@
-export function sayHello() {
-  console.log("Hello, World!");
-}
+export { ConsulConfigClient, ConfigBootstrap } from "./consul-config-client";

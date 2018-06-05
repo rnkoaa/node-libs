@@ -31,10 +31,11 @@ export class ConsulConfigClient {
           this._consulClient.kv.get(`config/${applicationName}/${environment}`, (err, result: any) => {
             if (err) {
               reject(err);
+            } else {
+              const configString = result.Value;
+              const configObj = JSON.parse(configString);
+              resolve(configString);
             }
-            const configString = result.Value;
-            const configObj = JSON.parse(configString);
-            resolve(configString);
           });
         }
       }
@@ -87,7 +88,16 @@ export class ConfigBootstrap {
   }
 
   private _isBootstrapped(): boolean {
-    const bootstrapConfigFile = path.join(CONFIG_DIR, "bootstrap.json");
-    return fs.existsSync(bootstrapConfigFile);
+    const bootstrapConfigFile = path.join(__dirname, "../config/bootstrap.json");
+    if (fs.existsSync(bootstrapConfigFile)) {
+      const bootstrapConfigString = fs.readFileSync(bootstrapConfigFile, "utf-8");
+      const bootstrapConfigObj = JSON.parse(bootstrapConfigString);
+      return (
+        bootstrapConfigObj != undefined &&
+        bootstrapConfigObj.consul != undefined &&
+        bootstrapConfigObj.consul.enabled
+      );
+    }
+    return false;
   }
 }

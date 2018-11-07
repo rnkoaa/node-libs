@@ -1,0 +1,22 @@
+version: '2'
+
+tasks:
+  run:
+    cmds:
+      - gulp
+      - node dist/index.js
+
+  dist:
+    cmds:
+      - rm -rf export
+      - gulp
+      - mkdir export
+      - cp dist/index.js dist/consul-config-client.js export
+      - cp package.json export
+
+  libs:
+    cmds: 
+      - npm install
+  build:
+    cmds:
+      - gulp

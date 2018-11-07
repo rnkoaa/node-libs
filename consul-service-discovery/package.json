@@ -4,11 +4,25 @@
   "description": "Service discovery using consul service for Nodejs applications",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "format": "prettier --write \"lib/**/*.ts\" \"lib/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "yarn run build",
+    "preversion": "yarn run lint",
+    "prepublishOnly": "yarn test && yarn run lint",
+    "version": "yarn run format && git add -A src",
+    "postversion": "git push && git push --tags",
+    "test": "jest --config jestconfig.json"
   },
   "author": "Richard Agyei <richard.agyei@outlook.com>",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^2.8.3"
+    "@types/jest": "^23.3.9",
+    "jest": "^23.6.0",
+    "prettier": "^1.15.0",
+    "ts-jest": "^23.10.4",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "typescript": "^3.1.6"
   }
 }

@@ -16,6 +16,10 @@
   },
   "author": "Richard Agyei <richard.agyei@outlook.com>",
   "license": "ISC",
+  "dependencies": {
+    "async": "^2.6.0",
+    "winston": "^2.4.0"
+  },
   "devDependencies": {
     "@types/jest": "^23.3.9",
     "jest": "^23.6.0",
@@ -23,6 +27,11 @@
     "ts-jest": "^23.10.4",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.1.6",
+    "@types/async": "^2.0.45",
+    "@types/node": "^10.12.2",
+    "@types/winston": "^2.3.7",
+    "nodemon": "^1.13.0",
+    "ts-node": "^5.0.0"
   }
 }

@@ -1,11 +1,12 @@
+import { ServiceInstance } from "./types/consul";
 export class DataStore {
-  _instances: Array<string>;
+  _instances: Array<ServiceInstance>;
 
   constructor() {
     this._instances = [];
   }
 
-  public get instances(): Array<string> {
+  public get instances(): Array<ServiceInstance> {
     return this._instances;
   }
 
@@ -13,39 +14,54 @@ export class DataStore {
     this._instances = [];
   }
 
-  public set instances(_instances: Array<string>) {
+  public set instances(_instances: Array<ServiceInstance>) {
     this._instances = _instances;
   }
 
-  public addInstance(instance: string): void {
+  public addInstance(instance: ServiceInstance): void {
+    if (!instance.serviceId) {
+      throw new Error("instance service Id is required.")
+    }
+    // remove an instance with the same serviceId if it exists
+    // if it does not exist, nothing will happen.
+    this.removeIfExists(instance.serviceId);
+
+    // then add the new instance to the list
     this._instances.push(instance);
   }
 
-  // instanceData: Array<any> = [];
+  public removeById(id: string): void {
+    const idx = this._instances.findIndex(item => item.id === id);
+    if (idx > -1) {
+      this.instances.splice(idx, 1);
+    }
+  }
 
-  //   constructor() { }
+  public remove(serviceId: string): void {
+    const idx = this._instances.findIndex(item => item.serviceId === serviceId);
+    if (idx > -1) {
+      this.instances.splice(idx, 1);
+    }
+  }
 
-  //   add(instance: any): void {
-  //       this.instanceData.push(instance);
-  //   }
+  // overloaded method to indicate that nothing happens if it does not exist.
+  public removeIfExists(serviceId: string): void {
+    this.remove(serviceId);
+  }
 
-  //   clear(): void {
-  //       this.instanceData = [];
-  //   }
+  findById(id: string): ServiceInstance {
+    const idx = this._instances.findIndex(item => item.id === id);
+    if (idx > -1) {
+      return this._instances[idx];
+    }
+    return <ServiceInstance>{};
+  }
 
-  //   get(id: string): any {
-  //       const idx = this.instanceData.findIndex(item => item.id === id);
-  //       if(idx > -1) {
-  //           return this.instanceData[idx];
-  //       }
-  //       return null;
-  //   }
-    
-  //   findInstancesByName(name: string): Array<any> {
-  //      return this.instanceData.find(item => item.name === name);
-  //   }
-    
-  //   findInstancesByServiceId(serviceId: string): Array<any> {
-  //      return this.instanceData.find(item => item.serviceId === serviceId);
-  //   }
+  findInstancesByName(name: string): Array<ServiceInstance> {
+    return this._instances.filter(item => item.serviceName === name);
+  }
+
+  findInstancesByServiceId(serviceId: string): Array<ServiceInstance> {
+    return this._instances.filter(instance => instance.serviceId === serviceId);
+  }
 }

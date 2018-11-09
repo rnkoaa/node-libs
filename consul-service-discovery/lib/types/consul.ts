@@ -67,3 +67,13 @@ export interface Instance {
 export interface TaggedAddresses {
 
 }
+
+export interface ServiceInstance {
+    id: string;
+    serviceId: string;
+    serviceName: string;
+    checkIndex: number;
+    port: number;
+    host: string;
+
+}

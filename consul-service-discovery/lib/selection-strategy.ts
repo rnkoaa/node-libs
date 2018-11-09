@@ -1,33 +1,83 @@
-// import Datastore from "./types/datastore";
+import { DataStore } from "./data-store";
+import { ServiceInstance } from "./types/consul";
 
-// export class SelectionStrategy {
-//     _datastore: Datastore;
-//     _lastInstanceIndex = 0;
+export interface SelectionStrategy {
+  select(serviceName: string, dataStore: DataStore): ServiceInstance;
+}
+export interface IndexMap {
+  lastInstanceIndex: number;
+  instanceName: string;
+}
+export class RoundRobinStrategy implements SelectionStrategy {
+  indexMaps: Array<IndexMap> = [];
 
-//     constructor(_ds: Datastore) {
-//         this._datastore = _ds;
-//     }
+  public select(serviceName: string, dataStore: DataStore): ServiceInstance {
+    const instances: Array<ServiceInstance> = dataStore.instances;
+    if (this.indexMaps.length <= 0) {
+      this.populateInstance(serviceName);
+    }
+    let instanceIdx = this.indexMaps.findIndex(item => item.instanceName === serviceName);
+    if (instanceIdx <= -1) {
+      this.populateInstance(serviceName);
+      instanceIdx = this.indexMaps.findIndex(item => item.instanceName === serviceName);
+    }
 
-//     randomSelector(instanceName: string): any {
-//         const storedServicesData = this._datastore.findInstancesByName(instanceName);
-//         let serviceData = storedServicesData[Math.floor((Math.random() * storedServicesData.length))];
-//         serviceData.serviceUrl = serviceData.secure ? "https://" : "http://" + serviceData.host + ":" + serviceData.port;
-//         return serviceData;
-//     }
+    let instance: ServiceInstance;
+    let lastInstanceIndex = this.indexMaps[instanceIdx].lastInstanceIndex;
+    if (instances && instances.length > 0) {
+      if (instances[++lastInstanceIndex]) {
+        instance = instances[lastInstanceIndex];
+      } else {
+        lastInstanceIndex = 0;
+        instance = instances[0];
+      }
+      this.indexMaps[instanceIdx].lastInstanceIndex = lastInstanceIndex;
+    } else {
+      instance = <ServiceInstance>{}
+    }
+    return instance;
+  }
 
+  populateInstance(serviceName: string): void {
+    const indexMap = <IndexMap>{
+      lastInstanceIndex: 0,
+      instanceName: serviceName
+    }
+    this.indexMaps.push(indexMap);
+  }
+}
 
-//     roundRobinSelector(instanceName: string): any {
-//         const storedServicesData = this._datastore.findInstancesByName(instanceName);
-//         let serviceData;
+export class RandomStrategy implements SelectionStrategy {
+  public select(serviceName: string, dataStore: DataStore): ServiceInstance {
+    // throw new Error('Method not implemented.');
+    // if (storedServicesData[++self.lastInstanceIndex]) {
+    //     serviceData = storedServicesData[self.lastInstanceIndex];
+    // } else {
+    //     self.lastInstanceIndex = 0;
+    //     serviceData = storedServicesData[0];
+    // }
 
-//         if (storedServicesData[++this._lastInstanceIndex]) {
-//             serviceData = storedServicesData[this._lastInstanceIndex];
-//         } else {
-//             this._lastInstanceIndex = 0;
-//             serviceData = storedServicesData[0];
-//         }
+    return {
+      id: "", port: 8080,
+      host: "",
+      serviceId: "random",
+      serviceName: "",
+      checkIndex: 0,
+    };
+  }
+}
 
-//         serviceData.serviceUrl = serviceData.secure ? "https://" : "http://" + serviceData.host + ":" + serviceData.port;
-//         return serviceData;
-//     }
-// }
+export class SelectionStrategyFactory {
+  createStrategy(type: 'random'): RandomStrategy;
+  createStrategy(type: 'round-robin'): RoundRobinStrategy;
+
+  public createStrategy(strategy: string): RandomStrategy | RoundRobinStrategy {
+    if (strategy === 'random') {
+      return new RandomStrategy();
+    } else if (strategy === 'round-robin') {
+      return new RoundRobinStrategy();
+    } else {
+      throw new Error('Select either a Hero or a Villain');
+    }
+  }
+}

@@ -3,6 +3,7 @@ import { DataStore } from '../lib/data-store';
 
 import { SelectionStrategyFactory } from '../lib/selection-strategy';
 const selectionStrategyFactory = new SelectionStrategyFactory();
+const randomSelectionStrategy = selectionStrategyFactory.createStrategy('random');
 
 test('random selection strategy for a single instance', () => {
   const dataStore: DataStore = new DataStore();
@@ -12,7 +13,6 @@ test('random selection strategy for a single instance', () => {
   expect(instance.serviceName).toEqual('service-name-2');
 
   dataStore.addInstance(instance);
-  const randomSelectionStrategy = selectionStrategyFactory.createStrategy('random');
   const serviceInstance = randomSelectionStrategy.select('service-name-2', dataStore);
   expect(serviceInstance).not.toBeUndefined;
   expect(serviceInstance.serviceId).toEqual('service-2');
@@ -27,7 +27,6 @@ test('random selection strategy for a non existent instance', () => {
   expect(instance.serviceName).toEqual('service-name-2');
 
   dataStore.addInstance(instance);
-  const randomSelectionStrategy = selectionStrategyFactory.createStrategy('random');
   const serviceInstance = randomSelectionStrategy.select('service-non-existent', dataStore);
   expect(serviceInstance).not.toBeUndefined;
   expect(serviceInstance.serviceId).toBeUndefined;
@@ -40,7 +39,6 @@ test('random selection strategy for multiple instances', () => {
   const instances = TestInstanceProvider.multipleInstancesOfSameService('service-name', count);
   dataStore.addInstances(instances);
 
-  const randomSelectionStrategy = selectionStrategyFactory.createStrategy('random');
   const serviceInstance = randomSelectionStrategy.select(`service-name-${count}`, dataStore);
   expect(serviceInstance).not.toBeUndefined;
   expect(serviceInstance.serviceName).toEqual(`service-name-${count}`);
@@ -55,7 +53,6 @@ test('random selection strategy for multiple instances and multiple services', (
   const cubeInstances = TestInstanceProvider.multipleInstancesOfSameService('service-cube', count);
   dataStore.addInstances(cubeInstances);
 
-  const randomSelectionStrategy = selectionStrategyFactory.createStrategy('random');
   const serviceInstance = randomSelectionStrategy.select(`service-name-${count}`, dataStore);
   expect(serviceInstance).not.toBeUndefined;
   expect(serviceInstance.serviceName).toEqual(`service-name-${count}`);

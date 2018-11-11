@@ -49,21 +49,11 @@ export class RoundRobinStrategy implements SelectionStrategy {
 
 export class RandomStrategy implements SelectionStrategy {
   public select(serviceName: string, dataStore: DataStore): ServiceInstance {
-    // throw new Error('Method not implemented.');
-    // if (storedServicesData[++self.lastInstanceIndex]) {
-    //     serviceData = storedServicesData[self.lastInstanceIndex];
-    // } else {
-    //     self.lastInstanceIndex = 0;
-    //     serviceData = storedServicesData[0];
-    // }
-
-    return {
-      id: "", port: 8080,
-      host: "",
-      serviceId: "random",
-      serviceName: "",
-      checkIndex: 0,
-    };
+    const storedServices = dataStore.findInstancesByName(serviceName);
+    if (storedServices.length > 0) {
+      return storedServices[Math.floor((Math.random() * storedServices.length))];
+    }
+    return <ServiceInstance>{};
   }
 }
 

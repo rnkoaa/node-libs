@@ -1,21 +1,28 @@
 import { ServiceInstance } from './types/consul';
 export class DataStore {
+  _applicationId: string;
   _instances: Array<ServiceInstance>;
 
   constructor() {
     this._instances = [];
+    this._applicationId = '';
   }
 
   public get instances(): Array<ServiceInstance> {
     return this._instances;
   }
+  public set instances(_instances: Array<ServiceInstance>) {
+    this._instances = _instances;
+  }
+  public set applicationId(_applicationId: string) {
+    this._applicationId = _applicationId;
+  }
+  public get applicationId(): string {
+    return this._applicationId;
+  }
 
   public clear(): void {
     this._instances = [];
-  }
-
-  public set instances(_instances: Array<ServiceInstance>) {
-    this._instances = _instances;
   }
 
   public addInstance(instance: ServiceInstance): void {

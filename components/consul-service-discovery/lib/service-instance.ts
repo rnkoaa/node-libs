@@ -8,6 +8,7 @@ export class ServiceInstance {
   port: number;
   status: string;
   executed: boolean;
+  secure: boolean;
 
   static convert(healthService: HealthService): ServiceInstance {
     const serviceInstance = new ServiceInstance();

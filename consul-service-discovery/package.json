@@ -17,12 +17,16 @@
   "author": "Richard Agyei <richard.agyei@outlook.com>",
   "license": "ISC",
   "dependencies": {
-    "@creditkarma/consul-client": "^0.8.3",
+    "@types/uuid": "^3.4.4",
     "async": "^2.6.0",
+    "axios": "^0.18.0",
+    "consul": "^0.34.1",
+    "uuid": "^3.3.2",
     "winston": "^2.4.0"
   },
   "devDependencies": {
     "@types/async": "^2.0.45",
+    "@types/consul": "^0.23.33",
     "@types/jest": "^23.3.9",
     "@types/node": "^10.12.2",
     "@types/winston": "^2.3.7",

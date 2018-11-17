@@ -12,7 +12,7 @@ export class RoundRobinStrategy implements SelectionStrategy {
   indexMaps: Array<IndexMap> = [];
 
   public select(serviceName: string, dataStore: DataStore): ServiceInstance {
-    const instances: Array<ServiceInstance> = dataStore.instances;
+    const instances: Array<ServiceInstance> = dataStore.findInstancesByName(serviceName);
     if (this.indexMaps.length <= 0) {
       this.populateInstance(serviceName);
     }

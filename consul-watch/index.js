@@ -20,7 +20,7 @@ function fromCallback(fn) {
 const datastore = new DataStore();
 const consul = require('consul')({
   promisify: fromCallback,
-  host: 'localhost',
+  host: 'loc alhost',
   port: 8500,
   secure: false
 });
@@ -74,7 +74,7 @@ watcher.on('change', data => {
 
         })
       })
-      
+
       console.log(datastore.findInstancesByName("apricot"))
     }).catch(err => `There are errors seen`);
 });
